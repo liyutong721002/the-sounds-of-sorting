@@ -1,5 +1,6 @@
 package edu.grinnell.csc207.soundsofsorting;
 
+import edu.grinnell.csc207.soundsofsorting.sortevents.CompareEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -119,6 +120,7 @@ public class ControlPanel extends JPanel {
                 if (!isSorting) {
                     scale = generateScale((String) scales.getSelectedItem());
                     notes.initializeAndShuffle(scale.size());
+                    System.out.println("Repaint1");
                     ControlPanel.this.panel.repaint();
                 }
             } 
@@ -139,7 +141,7 @@ public class ControlPanel extends JPanel {
                 // 1. Create the sorting events list
                 // 2. Add in the compare events to the end of the list
                 List<SortEvent<Integer>> events = new java.util.LinkedList<>();
-                
+                events.add(new CompareEvent(0,0));
                 // NOTE: The Timer class repetitively invokes a method at a
                 //       fixed interval.  Here we are specifying that method
                 //       by creating an _anonymous subclass_ of the TimeTask
@@ -153,14 +155,23 @@ public class ControlPanel extends JPanel {
                     public void run() {
                         if (index < events.size()) {
                             SortEvent<Integer> e = events.get(index++);
+                            e.apply(notes.getNotes());
+                            for (int i = 0; i < e.getAffectedIndices().size(); i++){
+                                //System.out.println(e.getAffectedIndices().get(i));
+                                scale.playNote(e.getAffectedIndices().get(i), e.isEmphasized());
+                                notes.highlightNote(e.getAffectedIndices().get(i));
+                            }
+                            
                             // TODO: fill me in!
                             // 1. Apply the next sort event.
                             // 3. Play the corresponding notes denoted by the
-                            //    affected indices logged in the event.
+                            //    affected indice logged in the event.
                             // 4. Highlight those affected indices.
+                            System.out.println("Repaint2");
                             panel.repaint();
                         } else {
                             this.cancel();
+                            System.out.println("Repaint3");
                             panel.repaint();
                             isSorting = false;
                         }

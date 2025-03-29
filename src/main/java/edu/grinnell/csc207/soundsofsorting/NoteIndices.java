@@ -1,4 +1,7 @@
 package edu.grinnell.csc207.soundsofsorting;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A collection of indices into a Scale object.
@@ -6,11 +9,16 @@ package edu.grinnell.csc207.soundsofsorting;
  * in the program.
  */
 public class NoteIndices {
+    
+    private List<Integer> indices;
+    private List<Boolean> highlighted;
+    private int size;
+    
     /**
      * @param n the size of the scale object that these indices map into
      */
     public NoteIndices(int n) {
-        // TODO: fill me in!
+        initializeAndShuffle(n);
     }
     
     /**
@@ -20,13 +28,21 @@ public class NoteIndices {
      * @param n the size of the scale object that these indices map into
      */
     public void initializeAndShuffle(int n) {
-        // TODO: fill me in!
+        indices = new ArrayList<Integer>();
+        highlighted = new ArrayList<Boolean>(Collections.nCopies(n, false));
+
+        for (int i = 0; i < n; i++) {
+            indices.add(i);
+        }
+
+        Collections.shuffle(indices);
+        size = n;
     }
     
     /** @return the indices of this NoteIndices object */
     public Integer[] getNotes() { 
-        // TODO: fill me in!
-        return null;
+        Integer[] arr = new Integer[size];
+        return indices.toArray(arr);
     }
     
     /**
@@ -34,7 +50,9 @@ public class NoteIndices {
      * @param index the index to highlight
      */
     public void highlightNote(int index) {
-        // TODO: fill me in
+        if (index >= 0 && index < highlighted.size()) {
+            highlighted.set(index, true);
+        }
     }
     
     /**
@@ -42,12 +60,11 @@ public class NoteIndices {
      * @return true if the given index is highlighted
      */
     public boolean isHighlighted(int index) {
-        // TODO: fill me in
-        return false;
+        return index >= 0 && index < highlighted.size() && highlighted.get(index);
     }
     
     /** Clears all highlighted indices from this collection */
     public void clearAllHighlighted() {
-        // TODO: fill me in
+        highlighted = new ArrayList<Boolean>(Collections.nCopies(size, false));
     }
 }
